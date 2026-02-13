@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "1.Array", "1.Array\1.Array.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2.List", "2.List\2.List.vcxproj", "{938A7F78-449C-4083-A7ED-9C27046FBE78}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3.LinkedList", "3.LinkedList\3.LinkedList.vcxproj", "{6543F447-83FE-4DBB-B621-DCA66D2AF4CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -16,6 +18,8 @@ Global
 		{FB7C0D08-C629-4AA2-97A1-9F7694BA6B92}.Debug|x64.Build.0 = Debug|x64
 		{938A7F78-449C-4083-A7ED-9C27046FBE78}.Debug|x64.ActiveCfg = Debug|x64
 		{938A7F78-449C-4083-A7ED-9C27046FBE78}.Debug|x64.Build.0 = Debug|x64
+		{6543F447-83FE-4DBB-B621-DCA66D2AF4CB}.Debug|x64.ActiveCfg = Debug|x64
+		{6543F447-83FE-4DBB-B621-DCA66D2AF4CB}.Debug|x64.Build.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

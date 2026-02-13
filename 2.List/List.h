@@ -176,7 +176,8 @@ public:
 	T& operator[](int index)
 	{
 		// Check range of index.
-		//assert(index < 0 || index >= size);
+		// Assert 안에는 통과가되는 조건을 넣어야한다!
+		assert(index >= 0 && index < size);
 		return data[index];
 	}
 
