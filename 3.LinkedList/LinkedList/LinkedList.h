@@ -30,8 +30,21 @@ public:
 
 	~LinkedList()
 	{
-		// TODO: free memory.
+		// free memory.
+		NodeType current = head;
+		NodeType trail = nullptr;
 
+		// Rounding && Free memory
+		while (current)
+		{
+			NodeType next = current->next;
+			delete current;
+			current = next;
+		}
+
+		// Clean-up pointer.
+		head = nullptr;
+		count = 0;
 	}
 
 	// Insert Node.
