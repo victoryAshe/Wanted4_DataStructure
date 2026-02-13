@@ -16,7 +16,7 @@ private:
 	{}
 
 	Node(T data)
-		:data(T), next(nullptr)
+		:data(data), next(nullptr)
 	{
 	}
 
