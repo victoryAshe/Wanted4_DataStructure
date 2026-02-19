@@ -20,12 +20,6 @@ public:
 
 	~LinkedList()
 	{
-		//// check heap memory error.
-		//if (_heapchk() != _HEAPOK)
-		//{
-		//	__debugbreak();
-		//}
-
 		// Clean memory up.
 		Clear();
 
