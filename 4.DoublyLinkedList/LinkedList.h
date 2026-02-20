@@ -31,7 +31,7 @@ public:
 	}
 
 	// memory 정리 함수.
-	// first와 last는 제외한다.
+	// first와 last는 제외한다.`
 	void Clear()
 	{
 		// Data를 갖는 첫 item부터 삭제.

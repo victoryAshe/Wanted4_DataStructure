@@ -1,8 +1,8 @@
-#include "Container/Stack.h"
+#include "Container/queue.h"
 #include "Location2D.h"
-
-#include <iostream>
-#include <Windows.h> // 콘솔 제어를 위해 활용.
+#include <iostream>		// std::cout.
+#include <Windows.h>	// 콘솔 제어를 위해 활용.
+#include <queue>
 
 // Direction. 
 // Order to add: up => down => left => right
@@ -47,31 +47,32 @@ char map[mazeSize][mazeSize] =
 	{'1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1'}
 };
 
-// Check if the position to visit is valid.
-bool isValidLocation(const Location2D& location)
+// 방문하려는 위치가 유효한지 확인하는 함수.
+bool IsValidLocation(const Location2D& location)
 {
-	// For convenience.
+	// 편의 목적.
 	const int row = location.row;
 	const int col = location.col;
 
-	// Check the range of the index.
-	if (row < 0 || row >= mazeSize || col < 0 || col >= mazeSize)
+	// 인덱스 범위 확인.
+	if (row < 0 || row >= mazeSize
+		|| col < 0 || col >= mazeSize)
 	{
 		return false;
 	}
 
-	// Check.
+	// 이동하려는 곳이 이동 가능한지 확인.
 	return map[row][col] == '0' || map[row][col] == 'x';
 }
 
-// Clear the Screen of the console.
+// 콘솔 화면 지우는 함수.
 void ClearScreen()
 {
-	// console command clearscreen.
+	// 콘솔 명령어 cls 실행.
 	system("cls");
 }
 
-// Set Text Colour.
+// 텍스트 색상 지정 함수.
 void SetConsoleColor(WORD color)
 {
 	SetConsoleTextAttribute(
@@ -80,13 +81,15 @@ void SetConsoleColor(WORD color)
 	);
 }
 
-
-// Draw the Map.
+// 맵 그리는 함수.
 void PrintMap(const Location2D& playerPosition, DWORD delay)
 {
-	// Stop Thread until delay(unit: millisecond => second/1000).
+	// 쓰레드 재우는 함수(단위: 밀리초-1/1000초).
+	// Sleep을 통해 Animation처럼 구현.
 	Sleep(delay);
 
+	// 콘솔 화면 지우기.
+	//ClearScreen();
 	COORD coord;
 	coord.X = 0;
 	coord.Y = 0;
@@ -95,14 +98,14 @@ void PrintMap(const Location2D& playerPosition, DWORD delay)
 		coord
 	);
 
-	// Draw Rounding the map.
-	for (int row = 0; row < mazeSize; ++row)
+	// 맵 순회하면서 그리기.
+	for (int row = 0; row < mazeSize; ++row)	// 행(세로) 순회.
 	{
-		for (int col = 0; col < mazeSize; ++col)
+		for (int col = 0; col < mazeSize; ++col) // 열(가로) 순회.
 		{
-			// Print player.
-			if (row == playerPosition.row &&
-				col == playerPosition.col)
+			// 플레이어 출력.
+			if (row == playerPosition.row
+				&& col == playerPosition.col)
 			{
 				SetConsoleColor(FOREGROUND_GREEN);
 				std::cout << "P ";
@@ -114,8 +117,8 @@ void PrintMap(const Location2D& playerPosition, DWORD delay)
 				continue;
 			}
 
-			// Print target position.
-			if(map[row][col]=='x')
+			// 목표 위치 출력.
+			if (map[row][col] == 'x')
 			{
 				SetConsoleColor(FOREGROUND_RED);
 				std::cout << "X ";
@@ -127,18 +130,17 @@ void PrintMap(const Location2D& playerPosition, DWORD delay)
 				continue;
 			}
 
-			// Print normal map item.
+			// 맵 출력.
 			std::cout << map[row][col] << " ";
 		}
+
 		std::cout << "\n";
 	}
 }
 
-
-
 int main()
 {
-	// Turn off the cursor.
+	// 커서 끄기.
 	CONSOLE_CURSOR_INFO info;
 	info.dwSize = 1;
 	info.bVisible = FALSE;
@@ -147,7 +149,7 @@ int main()
 		&info
 	);
 
-	// Search the start position.
+	// 시작 위치 검색.
 	Location2D start;
 
 	bool found = false;
@@ -155,7 +157,7 @@ int main()
 	{
 		for (int col = 0; col < mazeSize; ++col)
 		{
-			// Search the start position character.
+			// 시작지점 문자 찾기.
 			if (map[row][col] == 'e')
 			{
 				start.row = row;
@@ -165,60 +167,58 @@ int main()
 			}
 		}
 
-		// If search is successed, Quit this loop.
+		// 찾았으면 루프 종료.
 		if (found)
 		{
 			break;
 		}
 	}
 
-	// Print Initial Map.
+	// 초기 맵 출력.
 	PrintMap(start, 0);
 
-	// Create Stack.
-	Stack<Location2D, mazeSize> stack;
-	
-	// Add start position to stack.
-	stack.Push(start);
+	// queue 생성.
+	Queue<Location2D, mazeSize> queue;
 
-	// Use DFS to find path.
-	// if stack is not empty == The position to visit is not empty.
-	// Visit and Find the path.
-	found = false;
-	while (!stack.IsEmpty())
+	// 시작 위치 queue에 추가.
+	queue.Enqueue(start);
+
+	// 길찾기 (BFS).
+	// 스택이 비어있지 않으면 = 방문할 위치가 남아 있으면.
+	// 방문 맟 길찾기 진행.
+	while (!queue.IsEmpty())
 	{
-		// Pop the position to visit.
+		// 방문할 위치 꺼내기.
 		Location2D current;
-		if (!stack.Pop(current))
+		if (!queue.Dequeue(current))
 		{
 			break;
 		}
 
-		// Print the position with Animation-like effect.
+		// 위치 출력.
 		PrintMap(current, 500);
 
-		// Check if it arrived to the exit.
+		// 출구에 도착했는지 확인.
 		if (map[current.row][current.col] == 'x')
 		{
 			std::cout << "\n미로 탐색 성공\n";
-			found = true;
-			break;
+			return 0;
 		}
 
-		// Else: Mark down the visited position.
+		// 방문 및 방문한 위치 표시.
 		map[current.row][current.col] = '.';
 
-		// Add next visit position to the stack.
+		// 방문할 지점 queue에 추가.
+		// Add next visit position to the queue.
 		for (int ix = 0; ix < 4; ++ix)
 		{
-			if (isValidLocation(Location2D(current.row + dy[ix], current.col + dx[ix])))
+			if (IsValidLocation(Location2D(current.row + dy[ix], current.col + dx[ix])))
 			{
-				stack.Push(Location2D(current.row + dy[ix], current.col + dx[ix]));
+				queue.Enqueue(Location2D(current.row + dy[ix], current.col + dx[ix]));
 			}
 		}
 	}
 
-	if (!found) std::cout << "\n미로 탐색 실패!\n";
-                                               
-	return 0;
+	// 길찾기 실패.
+	std::cout << "미로 탐색 실패\n";
 }
