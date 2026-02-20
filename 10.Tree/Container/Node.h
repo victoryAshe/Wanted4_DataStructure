@@ -30,7 +30,7 @@ public:
 	{
 		data = T();
 		parent = nullptr;
-		childeren.clear();
+		children.clear();
 	}
 
 public:
@@ -45,7 +45,7 @@ public:
 	}
 
 	// Add Children Node with a node.
-	void AddChilde(Node<T>* newChild)
+	void AddChild(Node<T>* newChild)
 	{
 		// Set current Node as a parent node.
 		newChild->SetParent(this);
@@ -58,11 +58,12 @@ public:
 	void RemoveChild(Node<T>* child)
 	{
 		// Search the node
+		RemoveChildRecursive(child);
 	}
 
 	// Getter/Setter.
 	inline T GetData() const { return data; }
-	inline std::vector<Node<T>*>& GetChildren() const { return children; }
+	inline std::vector<Node<T>*>& GetChildren() { return children; }
 	inline Node<T>* GetParent() const { return parent; }
 	inline void SetParent(Node<T>* newParent) { parent = newParent; }
 
@@ -104,14 +105,37 @@ private:
 			}
 
 			// Delte node.
-			SafeDelte(child);
+			SafeDelete(child);
 			return;
 		}
 
 		// case 02: it has child node.
-
+		while (children.size() > 0)
+		{
+			RemoveChildRecursive(children[0]);
+		}
 
 		// Finish
+		auto& parnetVector = child->GetParent()->GetChildren();
+
+		// Get the children list from the parent node.
+		auto& parentVector = child->GetParent()->GetChildren();
+
+		// Search the node to delete from children list.
+		auto childIt = std::find(
+			parentVector.begin(),
+			parentVector.end(),
+			child
+		);
+
+		// if search succeed, delete the node.
+		if (childIt != parentVector.end())
+		{
+			parentVector.erase(childIt);
+		}
+
+		// Delete the node.
+		SafeDelete(child);
 	}
 
 private:
@@ -123,5 +147,4 @@ private:
 
 	// dynamic array of children nodes.
 	std::vector<Node<T>*> children;
-
 };

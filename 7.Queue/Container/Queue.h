@@ -94,5 +94,5 @@ private:
 	int rear = 0;
 
 	//  data container.
-	T data[capacity + _ 1] = {};
+	T data[capacity + 1] = {};
 };
